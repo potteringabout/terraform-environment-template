@@ -1,11 +1,10 @@
-locals {
-  terraform_version = "1.4.3"
-}
+
 
 terraform {
   before_hook "before_hook" {
     commands     = ["apply", "plan"]
-    execute      = ["tfswitch", "${local.terraform_version}"]
+    #execute      = ["tfswitch", "${local.terraform_version}"]
+    execute      = ["tfswitch", "1.4.4"]
   }
 }
 

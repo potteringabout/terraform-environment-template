@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  release-on-push:
+    runs-on: ubuntu-latest
+    environment: prod
+    #env:
+    #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - shell: bash
+        env:
+          config: ${{ secrets.CONFIG }}
+        run: |
+          echo "$config"
