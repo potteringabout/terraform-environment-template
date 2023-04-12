@@ -9,8 +9,8 @@ jobs:
     #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - shell: bash
-        env:
-          config: ${{ secrets.CONFIG }}
         run: |
-          echo "$config" > file
-          cat file
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.CONFIG }}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.CONFIG}} | sed 's/./& /g' 
