@@ -12,4 +12,5 @@ jobs:
         env:
           config: ${{ secrets.CONFIG }}
         run: |
-          echo "$config"
+          echo "$config" > file
+          cat file
