@@ -10,6 +10,6 @@ jobs:
     steps:
       - run: |
           echo "The GitHub Action Secret will be masked:  "
-          echo ${{ secrets.CONFIG }}
+          echo "${{ secrets.CONFIG }}"
           echo "Trick to echo GitHub Actions Secret:  "
-          echo ${{secrets.CONFIG}} | sed 's/./& /g' 
+          echo "${{secrets.CONFIG}}" | sed 's/./& /g' 
