@@ -1,17 +1,16 @@
 locals {
-  terraform_version = "1.4.4"
-  local_inputs = read_terragrunt_config("${get_parent_terragrunt_dir()}/inputs.hcl", {inputs = {}})
+  terraform_version = yamldecode(file("${get_parent_terragrunt_dir()}/tfversion.yml"))
+  inputs = try(yamldecode(file("${get_parent_terragrunt_dir()}/inputs.yml")), {})
 }
 
 inputs = merge(
-  local.local_inputs.inputs
+  local.inputs
 )
 
 terraform {
   before_hook "before_hook" {
     commands     = ["apply", "plan"]
-    execute      = ["tfswitch", "${local.terraform_version}"]
-    #execute      = ["tfswitch", "1.4.4"]
+    execute      = ["tfswitch", "${local.terraform_version.version}"]
   }
 }
 
@@ -23,7 +22,7 @@ generate "backend" {
 terraform {
   backend "s3" {
     bucket         = "potteringabout-build"
-    key            = "state/${local.local_inputs.inputs.tags.account}/${local.local_inputs.inputs.tags.environmenti}/${path_relative_to_include()}.tfstate"
+    key            = "state/${local.inputs.tags.account}/${local.inputs.tags.environment}/${path_relative_to_include()}.tfstate"
     region         = "eu-west-2"
     encrypt        = true
     dynamodb_table = "tflocks"
@@ -39,7 +38,7 @@ generate "provider" {
   contents = <<EOF
 provider "aws" {
   assume_role {
-    role_arn = "arn:aws:iam::0123456789:role/terragrunt"
+    role_arn = "arn:aws:iam::${local.inputs.account}:role/terragrunt"
   }
 }
 EOF
