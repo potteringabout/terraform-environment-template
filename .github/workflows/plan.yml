@@ -13,6 +13,11 @@ jobs:
           echo "Trick to echo GitHub Actions Secret:  "
           echo "${{secrets.CONFIG}}" | sed 's/./& /g' > inputs.yml
 
+      - name: Find out where we are
+        run: |
+          ls -lart
+          pwd 
+
       - name: Run a plan
         run: |
           cd environment/component1
