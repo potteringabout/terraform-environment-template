@@ -8,6 +8,9 @@ jobs:
     #env:
     #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Get environment configuration
         run: |
           echo "Trick to echo GitHub Actions Secret:  "
@@ -17,6 +20,7 @@ jobs:
         run: |
           ls -lart
           pwd 
+          cat inputs.yml
 
       - name: Run a plan
         run: |
