@@ -8,8 +8,15 @@ jobs:
     #env:
     #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: |
-          echo "The GitHub Action Secret will be masked:  "
-          echo "${{ secrets.CONFIG }}"
+      - name: Get environment configuration
+        run: |
           echo "Trick to echo GitHub Actions Secret:  "
-          echo "${{secrets.CONFIG}}" | sed 's/./& /g' 
+          echo "${{secrets.CONFIG}}" | sed 's/./& /g' > inputs.yml
+
+      - name: Run a plan
+        run: |
+          cd environment/component1
+          terragrunt plan
+
+
+      
