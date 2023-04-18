@@ -1,6 +1,20 @@
 locals {
   terraform_version = yamldecode(file("${get_parent_terragrunt_dir()}/tfversion.yml"))
   inputs = try(yamldecode(file("${get_parent_terragrunt_dir()}/inputs.yml")), {})
+  
+  project = local.inputs.tags.project
+  accountid = local.inputs.accountid
+  account = local.inputs.tags.account
+  component_path = split("/", path_relative_to_include())
+  component_type = element(local.component_path, 0) 
+  component = element(local.component_path, length(local.component_path)-1) 
+
+  environment = local.component_type == "environment" ? local.inputs.tags.environment : ""
+  
+  state_key = local.component_type == "environment" ? "state/${local.project}/${local.account}/${local.environment}/${local.component}.tfstate" : "state/${local.project}/${local.account}/${local.component}.tfstate"
+
+  deployment_role  = "arn:aws:iam::${local.accountid}:role/${local.project}-${local.account}-deployment"
+  
 }
 
 inputs = merge(
@@ -22,7 +36,7 @@ generate "backend" {
 terraform {
   backend "s3" {
     bucket         = "potteringabout-build"
-    key            = "state/${local.inputs.tags.account}/${local.inputs.tags.environment}/${path_relative_to_include()}.tfstate"
+    key            = "${local.state_key}"
     region         = "eu-west-2"
     encrypt        = true
     dynamodb_table = "tflocks"
@@ -37,13 +51,11 @@ generate "provider" {
   if_exists = "overwrite_terragrunt"
   contents = <<EOF
 
-%{ if local.inputs.account != "dev" }
 provider "aws" {
   assume_role {
-    role_arn = "arn:aws:iam::${local.inputs.account}:role/terragrunt"
+    role_arn = "${local.deployment_role}"
   }
 }
-%{ endfor }
 
 
 EOF
