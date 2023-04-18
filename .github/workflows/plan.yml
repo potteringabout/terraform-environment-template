@@ -25,11 +25,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      #- name: Get environment configuration
+      #  run: |
+      #    # echo "${{vars.CONFIG}}" | sed 's/./& /g' > inputs.yml
+      ##    # echo "Trick to echo GitHub Actions Secret:  "
+      #    printf "${{vars.CONFIG}}" > inputs.yml
+
       - name: Get environment configuration
         run: |
-          # echo "Trick to echo GitHub Actions Secret:  "
-          # echo "${{vars.CONFIG}}" | sed 's/./& /g' > inputs.yml
-          echo "${{vars.CONFIG}}" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g' > inputs.yml
+          printf "${{vars.CONFIG}}" > inputs.yml
 
       - name: Find out where we are
         run: |
