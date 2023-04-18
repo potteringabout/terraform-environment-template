@@ -13,8 +13,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Install TFSwitch
-        uses: warrensbox/tfswitch@v1
-
+        run: |
+          sudo apt install curl
+          curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
+          
       - name: Setup Terragrunt
         uses: autero1/action-terragrunt@v1.1.0
         with:
