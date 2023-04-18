@@ -36,10 +36,15 @@ generate "provider" {
   path = "provider.tf"
   if_exists = "overwrite_terragrunt"
   contents = <<EOF
+
+%{ if local.inputs.account != "dev" }
 provider "aws" {
   assume_role {
     role_arn = "arn:aws:iam::${local.inputs.account}:role/terragrunt"
   }
 }
+%{ endfor }
+
+
 EOF
 }
