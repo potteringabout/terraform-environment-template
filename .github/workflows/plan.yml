@@ -8,6 +8,27 @@ jobs:
     #env:
     #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+
+      - name: Install pre-reqs
+        run: |
+          echo "Installing the feature [tfswitch]"
+          apt -y update && apt -y upgrade 
+
+          apt -y install build-essential procps curl file git ca-certificates
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+
+
+      - name: Install TFSwitch
+        run: |
+          curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
+
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v1.1.0
+        with:
+          terragrunt_version: latest
+
       - name: Checkout
         uses: actions/checkout@v3
 

@@ -1,5 +1,5 @@
 locals {
-  terraform_version = yamldecode(file("${get_parent_terragrunt_dir()}/tfversion.yml"))
+  terraform = yamldecode(file("${get_parent_terragrunt_dir()}/terraform.yml"))
   inputs = try(yamldecode(file("${get_parent_terragrunt_dir()}/inputs.yml")), {})
   
   project = local.inputs.tags.project
@@ -24,7 +24,7 @@ inputs = merge(
 terraform {
   before_hook "before_hook" {
     commands     = ["apply", "plan"]
-    execute      = ["tfswitch", "${local.terraform_version.version}"]
+    execute      = ["tfswitch", "${local.terraform.version}"]
   }
 }
 
