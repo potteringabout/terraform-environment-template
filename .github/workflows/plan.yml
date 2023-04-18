@@ -27,8 +27,9 @@ jobs:
 
       - name: Get environment configuration
         run: |
-          echo "Trick to echo GitHub Actions Secret:  "
-          echo "${{secrets.CONFIG}}" | sed 's/./& /g' > inputs.yml
+          #echo "Trick to echo GitHub Actions Secret:  "
+          #echo "${{vars.CONFIG}}" | sed 's/./& /g' > inputs.yml
+          echo "${{vars.CONFIG}}" > inputs.yml
 
       - name: Find out where we are
         run: |
