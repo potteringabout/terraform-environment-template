@@ -1,9 +1,10 @@
 locals {
   terraform = yamldecode(file("${get_parent_terragrunt_dir()}/terraform.yml"))
   file_inputs = try(yamldecode(file("${get_parent_terragrunt_dir()}/inputs.yml")), {})
-  env_inputs = try(yamldecode(get_env("CONFIG)), {})
+  #env_inputs = try(yamldecode(get_env("CONFIG)), {})
   
-  inputs = merge( local.file_inputs, local.env_inputs)
+  #inputs = merge( local.file_inputs, local.env_inputs)
+  inputs = merge( local.file_inputs )
 
   project = local.inputs.tags.project
   accountid = local.inputs.accountid
@@ -20,10 +21,7 @@ locals {
   
 }
 
-inputs = merge(
-  local.inputs,
-  local.inputs2
-)
+inputs = local.inputs
 
 terraform {
   before_hook "before_hook" {
