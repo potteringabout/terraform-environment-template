@@ -1,6 +1,10 @@
 on:
   workflow_dispatch:
 
+env:
+  # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+  GITHUB_TOKEN: ${{ github.token }}
+
 jobs:
   release-on-push:
     runs-on: ubuntu-latest
@@ -22,6 +26,20 @@ jobs:
         with:
           terragrunt_version: latest
 
+      - uses: actions/cache@v3
+        name: Cache plugin dir
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - uses: terraform-linters/setup-tflint@v3
+        name: Setup TFLint
+        with:
+          tflint_version: v0.44.1
+
+      - name: Show version
+        run: tflint --version
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -37,9 +55,14 @@ jobs:
 
       - name: Find out where we are
         run: |
-          ls -lart
-          pwd 
           cat inputs.yml
+
+      - name: Init TFLint
+        run: tflint --init
+        
+      - name: Run TFLint
+        run: tflint -f compact
+
 
       - name: Run a plan
         run: |
