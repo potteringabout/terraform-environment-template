@@ -1,6 +1,13 @@
 on:
   workflow_dispatch:
 
+env:
+  AWS_REGION : "eu-west-2"
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+
 jobs:
   release-on-push:
     runs-on: ubuntu-latest
@@ -24,6 +31,13 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::730049440706:role/potteringabout-github-prod
+          role-session-name: ghsession
+          aws-region: ${{ env.AWS_REGION }}
 
       #- name: Get environment configuration
       #  run: |
