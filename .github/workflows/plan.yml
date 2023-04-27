@@ -1,3 +1,5 @@
+name: 'plan'
+
 on:
   workflow_dispatch:
 
@@ -77,8 +79,7 @@ jobs:
 
       - name: Run a plan
         run: |
-          cd environment/component1
-          terragrunt plan
+          terragrunt run-all plan
 
 
       
